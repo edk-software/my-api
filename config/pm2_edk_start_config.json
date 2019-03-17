@@ -1,0 +1,14 @@
+{
+  "apps": [
+    {
+      "name": "edk",
+      "script": "npm",
+      "args": "start",
+      "exec_mode" : "cluster",
+      "instances"   : 1,
+      "env": {
+        "PORT"      : "9090" // the port on which the app should listen
+      }
+    }
+  ]
+}

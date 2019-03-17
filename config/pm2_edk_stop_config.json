@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "edk",
+      "script": "npm",
+      "args": "stop"
+    }
+  ]
+}
