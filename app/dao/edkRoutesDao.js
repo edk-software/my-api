@@ -25,7 +25,7 @@ module.exports = {
 
         var values = [];
         var conditions = [];
-		conditions.push("  r.approved=1");
+		conditions.push(" archived = 0 and r.approved=1");
         if (id) {
             conditions.push("  r.id=?");
             values.push(id);
