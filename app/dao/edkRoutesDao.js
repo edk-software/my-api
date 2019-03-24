@@ -83,7 +83,7 @@ module.exports = {
     getEdkRoutesByTerritory: function(territoryId, excludedRouteId, callback) {
         var sqlQuery = "SELECT r.id as routeId, ca.id as areaId, t.id as territoryId,"
             + " r.name as routeName, ca.name as areaName, t.name as territoryName,"
-            + " r.routeFrom, r.routeTo, r.routeLength, r.routeAscent"
+            + " r.routeFrom, r.routeTo, r.routeLength, r.routeAscent, ca.eventDate "
             + " FROM cantiga_edk_routes r"
             + " join cantiga_areas ca"
             + " on(r.areaId = ca.id)"
