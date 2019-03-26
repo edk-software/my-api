@@ -8,9 +8,9 @@ module.exports = {
             " r.routeAuthor, r.routeFrom, r.routeFromDetails, r.routeTo, r.routeToDetails," +
             " r.routeCourse, r.routeLength, r.routeAscent, r.routeObstacles, r.createdAt, r.updatedAt," +
             " crs.startTime, crs.endTime, crs.participantLimit, crs.participantNum," +
-            " if(r.mapFile is not null, concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url'),r.publicAccessSlug, CONCAT('edk-map-route-',r.id, '.', SUBSTRING_INDEX(r.mapFile,'.',-1))) , null) as mapLink, " +
-            " if(r.gpsTrackFile is not null, concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url'),r.publicAccessSlug, CONCAT('edk-gps-route-',r.id, '.', SUBSTRING_INDEX(r.gpsTrackFile,'.',-1))), null) as gpsLink," +
-            " if(r.descriptionFile is not null ,concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url'),r.publicAccessSlug, CONCAT('edk-guide-route-',r.id, '.', SUBSTRING_INDEX(r.descriptionFile,'.',-1))), null) as DescriptionLink," +
+            " if(r.mapFile is not null, concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url' AND `projectId` = ca.projectId),r.publicAccessSlug, CONCAT('edk-map-route-',r.id, '.', SUBSTRING_INDEX(r.mapFile,'.',-1))) , null) as mapLink, " +
+            " if(r.gpsTrackFile is not null, concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url' AND `projectId` = ca.projectId),r.publicAccessSlug, CONCAT('edk-gps-route-',r.id, '.', SUBSTRING_INDEX(r.gpsTrackFile,'.',-1))), null) as gpsLink," +
+            " if(r.descriptionFile is not null ,concat_ws('/', (select `value` from cantiga_project_settings where `key` = 'edk_mirror_url' AND `projectId` = ca.projectId),r.publicAccessSlug, CONCAT('edk-guide-route-',r.id, '.', SUBSTRING_INDEX(r.descriptionFile,'.',-1))), null) as DescriptionLink," +
             " GROUP_CONCAT(rn.content SEPARATOR \"$|%\") as note" +
             " FROM cantiga_edk_routes r "+
             " join cantiga_areas ca " +
