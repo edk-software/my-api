@@ -4,7 +4,7 @@ const logger = require('../../config/logger')
 module.exports = {
 
     getEdkRegistrationSettings: function(routeId, callback) {
-        connection.query("select startTime, endTime, participantNum from cantiga_edk_registration_settings where routeId=?",
+        connection.query("select startTime, endTime, participantNum, externalParticipantNum,  (participantNum + externalParticipantNum) as allParticipantAmount from cantiga_edk_registration_settings where routeId=?",
             [routeId], function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRegistrationSettings error: " + err);
@@ -16,7 +16,7 @@ module.exports = {
             });
     },
     getEdkParticipantAmount: function(editionId, callback) {
-    var sqlQuery = "select sum(rs.participantNum)+sum(rs.externalParticipantNum) as participantAmount"
+    var sqlQuery = "select sum(rs.participantNum) + sum(rs.externalParticipantNum) as participantAmount "
         + " from cantiga_edk_registration_settings rs"
         + " join cantiga_edk_routes r"
         + " on(r.id = rs.routeId)"
