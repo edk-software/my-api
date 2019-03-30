@@ -120,7 +120,7 @@ module.exports = {
                 }
             });
     },
-    getEdkRouteList: function(territoryId, editionId,projectId,approved, callback) {
+    getEdkRouteList: function(territoryId, editionId,approved, callback) {
         var sqlQuery = "SELECT r.id, ct.id as territoryId, r.name as routeName, r.routeLength, r.routeType,"
             + " ct.name as territoryName, ct.locale, ca.id as areaId, ca.name as areaName FROM cantiga_edk_routes r"
             + " inner join cantiga_areas ca"
@@ -147,12 +147,6 @@ module.exports = {
         }
         else {
             conditions.push(" cp.editionId=2019");
-        }
-
-
-        if(projectId){
-            conditions.push(" cp.id=?");
-            values.push(projectId)
         }
 
         if(approved){
