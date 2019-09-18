@@ -16,7 +16,12 @@ exports.getAreasDetail = function(req, res) {
 };
 
 exports.getAreaList = function(req, res) {
-    edkAreasDao.getEdkAreaList(req.query.territoryId, req.query.editionId, function (result) {
+    edkAreasDao.getEdkAreaList(
+        req.query.territoryId, req.query.editionId,
+        req.query.areaId, req.query.eventDate,
+        req.query.orderByAreaName, req.query.orderByTerritoryName,
+        req.query.orderByRouteName, req.query.orderByRouteLength,
+        req.query.orderByEventDate, function (result) {
         httpResponse.sendHttpResponse(result, res, "Areas not found","getAreaList");
     });
 };

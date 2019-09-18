@@ -48,6 +48,9 @@ module.exports = {
             callback(err);
         } else {
             logger.info("getEdkRoute success");
+            //callback(rows.map(row => row.));
+            //przeparsowac
+            //przerobic na promisy
             callback(rows);
         }
     });

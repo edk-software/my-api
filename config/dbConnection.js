@@ -2,10 +2,10 @@ var mysql = require('mysql');
 
 
 var connection = mysql.createConnection({
-    host:'dbHostShouldGoHere',
-    user:'dbUserShouldGoHere',
-    password:'dbPassShouldGoHere',
-    database:'dbSchemaNameShouldGoHere',
+    host:'172.17.0.2',
+    user:'root',
+    password:'keroiraw12',
+    database:'admin_myapi',
     port:3306
 });
 
