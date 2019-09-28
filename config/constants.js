@@ -1,7 +1,10 @@
 
 var constant = {
 	defaultEditionId:"2019",
-	mirror_url:"http://m2.edk.org.pl/mirror/%HASH%/edk-guide-route-%ID%.%EXT%"
+	mirror_url:"http://m2.edk.org.pl/mirror/%HASH%/",
+	map_infix:		"edk-map-route",
+	gps_infix:		"edk-gps-route",
+	guide_infix:	"edk-guide-route"
 };
 
 

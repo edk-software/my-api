@@ -1,5 +1,7 @@
 var connection = require('../../config/dbConnection');
 const logger = require('../../config/logger')
+var constants = require('../../config/constants');
+const sqlQueryBuilder = require('../util/sqlQueryBuilder');
 
 module.exports = {
 
@@ -124,39 +126,61 @@ module.exports = {
                 }
             });
     },
-    getEdkRouteList: function(territoryId, editionId, callback) {
-        var sqlQuery = "SELECT r.id, ct.id as territoryId, r.name as routeName, r.routeLength, r.routeType,"
-            + " ct.name as territoryName, ct.locale, ca.id as areaId, ca.name as areaName FROM cantiga_edk_routes r"
-            + " inner join cantiga_areas ca"
-            + " on(r.areaId = ca.id)"
-            + " join cantiga_territories ct"
-            + " on(ca.territoryId = ct.id)"
-            + " join cantiga_projects cp"
-            + " on(ca.projectId=cp.id)"
-            + " join cantiga_area_statuses cas"
-            + " on(ca.statusId = cas.id)"
-            + " where ";
+    getEdkRouteList: function(territoryId, editionId, areaId, eventDate,
+                              orderByTerritoryName, orderByRouteName, orderByRouteLength,
+                              orderByEventDate, callback) {
+        var sqlQuery = "select ca.id as areaId, ca.name as areaName,  ca.eventDate, ca.territoryId, ct.name, cer.id as routeId, cer.name as routeName, " +
+            "cer.routeLength, cer.routeFrom, cer.routeTo, cer.updatedAt, cer.routeAscent, " +
+            "cers.participantNum, cers.externalParticipantNum, (cers.participantNum + cers.externalParticipantNum) as totalParticipants, " +
+            "cers.participantLimit, cers.startTime, cers.endTime, cer.descriptionFile, SUBSTRING_INDEX(mapFile,'.',-1) as filePostFix, cer.gpsTrackFile, cer.publicAccessSlug, " +
+            "cer.mapUpdatedAt, cer.descriptionUpdatedAt, cer.gpsUpdatedAt " +
+            "FROM admin_myapi.cantiga_areas ca " +
+            "join cantiga_territories ct " +
+            "on (ca.territoryId = ct.id) " +
+            "join cantiga_area_statuses cas " +
+            "on(ca.statusId = cas.id) " +
+            "join cantiga_projects cp " +
+            "on(cp.id = ca.projectId) " +
+            "join cantiga_edk_routes cer " +
+            "on(cer.areaId = ca.id) " +
+            "join cantiga_edk_registration_settings cers " +
+            "on(cers.routeId = cer.id) " +
+            "where ";
         var conditions = [];
         var values = [];
-        conditions.push(" cas.isPublish = 1 and r.approved=1 ");
+        conditions.push(" cas.isPublish = 1 and cer.approved=1 ");
 
         if(territoryId){
             conditions.push(" ct.id=?");
             values.push(territoryId)
         }
 
-        if(editionId){
-            conditions.push(" cp.editionId=?");
+        conditions.push(" cp.editionId=?");
+
+        if(editionId) {
             values.push(editionId);
-        }
-        else {
-            conditions.push(" cp.editionId=2019");
+        } else {
+            values.push(constants.defaultEditionId);
         }
 
+        var orderByConditions  = [];
+
+        var orderBySqlQuery = " order by ";
+
+        sqlQueryBuilder.addOrderByCondition(orderByConditions,  "ct.name", orderByTerritoryName);
+        sqlQueryBuilder.addOrderByCondition(orderByConditions,  "cer.name", orderByRouteName);
+        sqlQueryBuilder.addOrderByCondition(orderByConditions,  "cer.routeLength", orderByRouteLength);
+        sqlQueryBuilder.addOrderByCondition(orderByConditions,  "ca.eventDate", orderByEventDate);
         sqlQuery = sqlQuery + (conditions.length ?
                 conditions.join(' and ') : '1');
 
-        sqlQuery = sqlQuery + " ORDER BY areaName, routeName"
+        if(orderByConditions.length > 0) {
+
+            sqlQuery = sqlQuery + orderBySqlQuery +
+                orderByConditions.join(' ');
+        }
+
+        logger.info(sqlQuery);
         connection.query(sqlQuery,
             values, function (err, rows, field) {
                 if (err) {
@@ -164,6 +188,12 @@ module.exports = {
                     callback(err);
                 } else {
                     logger.info("getEdkRouteList success" );
+                    rows.map(row => {
+                        row.mirror_url_gps =  constants.mirror_url + constants.gps_infix + "-" + row.routeId + "." +row.filePostFix;
+                        row.mirror_url_map =  constants.mirror_url + constants.map_infix + "-" + row.routeId + "." +row.filePostFix;
+                        row.mirror_url_guide =  constants.mirror_url + constants.guide_infix + "-" + row.routeId + "." +row.filePostFix;
+                        delete  row.filePostFix;
+                    });
                     callback(rows);
                 }
             });
@@ -199,6 +229,7 @@ module.exports = {
                     callback(err);
                 } else {
                     logger.info("getEdkRouteAmount success");
+
                     callback(rows);
                 }
             });
