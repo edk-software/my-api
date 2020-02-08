@@ -10,6 +10,7 @@ var edkPromptController = require('../app/controllers/edkPromptController');
 var edkCategoriesController = require('../app/controllers/edkCategoriesController');
 var edkProjectController = require('../app/controllers/edkProjectController');
 var edkCountryController = require('../app/controllers/edkCountryController');
+var edkSearchController = require('../app/controllers/edkSearchController');
 
 module.exports = function (app) {
     app.use(function(req, res, next) {
@@ -41,4 +42,5 @@ module.exports = function (app) {
     app.get('/areaAmount',  edkAreasController.getAreaAmount);
     app.get('/countryAmount',  edkCountryController.getCountryAmount);
     app.get('/participantAmount',  edkRegistrationSettingsController.getParticipantAmount);
-}
+    app.get('/searchByString',  edkSearchController.getSearch);
+};
