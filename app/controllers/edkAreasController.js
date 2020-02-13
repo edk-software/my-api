@@ -31,9 +31,15 @@ exports.getAreasByTerritory = function(req, res) {
         httpResponse.sendHttpResponse(result, res, "Area does not contain any routes","getAreasByTerritory");
     });
 };
+
 exports.getAreaAmount = function(req, res) {
     edkAreasDao.getEdkAreaAmount(req.query.editionId,  function (result) {
         httpResponse.sendHttpResponse(result, res, "Area does not contain any routes","getAreaAmount");
     });
 };
 
+exports.getNewAreaDetail = function(req, res) {
+    edkAreasDao.getNewAreaDetail(req.query.id,  function (result) {
+        httpResponse.sendHttpResponse(result, res, "Area not found","getNewAreaDetail");
+    });
+};
