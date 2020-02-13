@@ -232,6 +232,34 @@ module.exports = {
                     callback(rows);
                 }
             });
+    },
+    getNewAreaDetail: function(id, callback) {
+        var sqlQuery = "SELECT" +
+            " ca.id as areaId," +
+            " ca.name as areaName," +
+            " ca.lat," +
+            " ca.lng," +
+            " ca.eventDate," +
+            " ct.id as territoryId," +
+            " ct.name as territoryName," +
+            " ca.customData," +
+            " an.content" +
+            " FROM cantiga_areas ca" +
+            " join cantiga_territories ct" +
+            " on(ca.territoryId = ct.id)" +
+            " join cantiga_edk_area_notes an" +
+            " on(ca.id = an.areaId) "
+            + " where ca.id=?";
+        connection.query(
+        sqlQuery, [id], function (err, rows, field) {
+            if (err) {
+                logger.error("getNewAreaDetail error: " +err);
+                callback(err);
+            } else {
+                logger.info("getNewAreaDetail success : " + rows);
+                callback(rows);
+            }
+        });
     }
 
 }
