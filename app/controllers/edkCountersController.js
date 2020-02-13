@@ -27,5 +27,5 @@ exports.getTerritoriesCount = function (req, res) {
 };
 
 exports.getCountryCount = function (req, res) {
-    httpResponse(constants.countryCount, res, null, "getCountryCount")
+    httpResponse.sendHttpResponse(constants.countryCount, res, null, "getCountryCount")
 };
