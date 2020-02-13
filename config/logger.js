@@ -2,7 +2,7 @@ var winston = require('winston');
 require('winston-daily-rotate-file');
 
 var transport = new(winston.transports.DailyRotateFile)({
-    filename: 'D:\\nauka\\Nauka z Marcinem i Jadwigą\\EDK\\logs\\logs.txt',
+    filename: 'Tutaj wpisz sciezke do logowania',
     datePattern: 'yyyy-MM-dd.',
     prepend: true,
     level: process.env.ENV === 'development' ? 'debug' : 'info',

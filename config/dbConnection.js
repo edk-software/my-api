@@ -2,10 +2,10 @@ var mysql = require('mysql');
 
 
 var connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'root',
-    database: 'admin_myapi',
+    host: 'Tutaj wpisz ip',
+    user: 'Tutaj wpisz usera do bazy',
+    password: 'Tutaj wpisz haslo do bazy',
+    database: 'Tutaj wpisz nazwe bazy',
     port: 3306
 });
 

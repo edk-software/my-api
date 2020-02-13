@@ -281,9 +281,6 @@ module.exports = {
             " on(cers.areaId = ca.id)" +
             " where cer.id=?"
 
-        logger.info(sqlQuery);
-        logger.info("TEKSTTEKST " + id + " TEKSTTEKST");
-
         connection.query(sqlQuery, [id],
             function (err, rows, field) {
                 if (err) {
