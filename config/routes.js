@@ -13,7 +13,7 @@ var edkSearchController = require('../app/controllers/edkSearchController');
 var edkCountersController = require('../app/controllers/edkCountersController');
 
 module.exports = function (app) {
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         res.header("Access-Control-Allow-Origin", "http://www.edk.org.pl/");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         res.removeHeader("X-Powered-By");
@@ -45,5 +45,7 @@ module.exports = function (app) {
     app.get('/counters/routes', edkCountersController.getRoutesCount);
     app.get('/counters/areas', edkCountersController.getAreasCount);
     app.get('/counters/territories', edkCountersController.getTerritoriesCount);
-    app.get('/searchByString',  edkSearchController.getSearch);
+    app.get('/routeDetail', edkRoutesController.getRouteDetail);
+
+    app.get('/searchByString', edkSearchController.getSearch);
 }
