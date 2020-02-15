@@ -2,6 +2,10 @@ var connection = require('../../config/dbConnection');
 const logger = require('../../config/logger')
 var constants = require('../../config/constants');
 const sqlQueryBuilder = require('../util/sqlQueryBuilder');
+var edkAreaNotesDao = require('./edkAreasNotesDao');
+var edkRouteNotesDao = require('./edkRouteNotesDao');
+
+
 
 module.exports = {
 
@@ -82,10 +86,10 @@ module.exports = {
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRoutesByArea error: " + err);
-                    callback(err);
+                    callback(null, err);
                 } else {
                     logger.info("getEdkRoutesByArea success");
-                    callback(rows);
+                    callback(rows, null);
                 }
             });
     },
@@ -193,12 +197,7 @@ module.exports = {
                     callback(err);
                 } else {
                     logger.info("getEdkRouteList success");
-                    rows.map(row => {
-                        row.mirror_url_gps = constants.mirror_url + constants.gps_infix + "-" + row.routeId + "." + row.filePostFix;
-                        row.mirror_url_map = constants.mirror_url + constants.map_infix + "-" + row.routeId + "." + row.filePostFix;
-                        row.mirror_url_guide = constants.mirror_url + constants.guide_infix + "-" + row.routeId + "." + row.filePostFix;
-                        delete row.filePostFix;
-                    });
+                    addFileLinks(rows);
                     callback(rows);
                 }
             });
@@ -241,15 +240,16 @@ module.exports = {
             });
     },
 
-    getEdkRouteDetail: function (id, callback) {
-        var sqlQuery = "SELECT ca.id," +
+    getEdkRouteDetail:  function (id, callback) {
+        let that = this;
+        var sqlQuery = "SELECT distinct ca.id as areaId," +
             " ca.name as areaName," +
             " ca.lat," +
             " ca.lng," +
             " ca.eventDate," +
+            " ca.massDate," +
             " ct.id as territoryId," +
             " ct.name as territoryName," +
-            " an.content," +
             " cer.id as routeId," +
             " cer.name as routeName," +
             " cer.routeFrom," +
@@ -266,30 +266,58 @@ module.exports = {
             " cer.gpsUpdatedAt," +
             " cer.mapUpdatedAt," +
             " cer.descriptionUpdatedAt," +
-            " cers.participantNum," +
-            " cers.externalParticipantNum," +
+            " cers.participantNum + cers.externalParticipantNum as participantAmount," +
             " cers.startTime," +
             " cers.endTime" +
             " from cantiga_areas ca" +
             " join cantiga_territories ct" +
             " on(ca.territoryId = ct.id)" +
-            " join cantiga_edk_area_notes an" +
-            " on(ca.id = an.areaId)" +
             " join cantiga_edk_routes cer" +
             " on(cer.areaId = ca.id)" +
             " join cantiga_edk_registration_settings cers" +
-            " on(cers.areaId = ca.id)" +
-            " where cer.id=?"
+            " on(cers.routeId = cer.id)" +
+            " where cer.id=?";
 
         connection.query(sqlQuery, [id],
-            function (err, rows, field) {
+            async function  (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRouteDetail error: " + err);
                     callback(err);
                 } else {
+                    addFileLinks(rows);
+                    let now = Date.now();
+                    if(rows[0].startTime > now || (rows[0].startTime < now && rows[0].endTime > now)) {
+                        rows[0].isRegistrationOpen = true;
+                    } else {
+                        rows[0].isRegistrationOpen = false;
+                    }
+                    await that.waitForEdkRoutesByArea(rows[0].areaId, rows);
+                    await edkAreaNotesDao.waitForAreaNotesContent(rows[0].areaId, rows);
+                    await edkRouteNotesDao.waitForRouteNotesContent(id, rows);
                     logger.info("getEdkRouteDetail success : " + rows);
                     callback(rows);
                 }
             });
+    },
+    waitForEdkRoutesByArea:  async function (id, rows) {
+        await new Promise((resolve, reject) => {
+            this.getEdkRoutesByArea(id, null, (routeRows, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].routes = routeRows;
+                }
+            });
+        });
     }
+}
+
+function addFileLinks(rows) {
+    rows.map(row => {
+        row.mirror_url_gps = constants.mirror_url + constants.gps_infix + "-" + row.routeId + "." + row.filePostFix;
+        row.mirror_url_map = constants.mirror_url + constants.map_infix + "-" + row.routeId + "." + row.filePostFix;
+        row.mirror_url_guide = constants.mirror_url + constants.guide_infix + "-" + row.routeId + "." + row.filePostFix;
+        delete row.filePostFix;
+    });
 }

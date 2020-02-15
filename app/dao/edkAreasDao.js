@@ -2,6 +2,11 @@ var connection = require('../../config/dbConnection');
 const logger = require('../../config/logger');
 var constants = require('../../config/constants');
 const sqlQueryBuilder = require('../util/sqlQueryBuilder');
+var edkRoutesDao = require('./edkRoutesDao');
+var edkAreaNotesDao = require('./edkAreasNotesDao');
+
+
+
 
 module.exports = {
 
@@ -242,24 +247,22 @@ module.exports = {
             " ca.eventDate," +
             " ct.id as territoryId," +
             " ct.name as territoryName," +
-            " ca.customData," +
-            " an.content" +
+            " ca.customData" +
             " FROM cantiga_areas ca" +
             " join cantiga_territories ct" +
             " on(ca.territoryId = ct.id)" +
-            " join cantiga_edk_area_notes an" +
-            " on(ca.id = an.areaId) "
-            + " where ca.id=?";
+             " where ca.id=?";
         connection.query(
-        sqlQuery, [id], function (err, rows, field) {
+        sqlQuery, [id], async function (err, rows, field) {
             if (err) {
                 logger.error("getNewAreaDetail error: " +err);
                 callback(err);
             } else {
+                await edkRoutesDao.waitForEdkRoutesByArea(id, rows);
+                await edkAreaNotesDao.waitForAreaNotesContent(id,rows);
                 logger.info("getNewAreaDetail success : " + rows);
                 callback(rows);
             }
         });
     }
-
 }

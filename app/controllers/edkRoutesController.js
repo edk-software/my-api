@@ -11,8 +11,13 @@ exports.getRoutes = function (req, res) {
 };
 
 exports.getRoutesByArea = function (req, res) {
-    edkRoutesDao.getEdkRoutesByArea(req.query.areaId, req.query.excludedRouteId, function (result) {
-        httpResponse.sendHttpResponse(result, res, "Area does not contain any routes", "getRoutesByArea");
+    edkRoutesDao.getEdkRoutesByArea(req.query.areaId, req.query.excludedRouteId, function (result, err) {
+        if(err) {
+            httpResponse.sendHttpResponse(err, res, "Area does not contain any routes", "getRoutesByArea");
+        } else {
+            httpResponse.sendHttpResponse(result, res, "Area does not contain any routes", "getRoutesByArea");
+        }
+
     });
 };
 
