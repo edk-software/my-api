@@ -11,6 +11,7 @@ var edkCategoriesController = require('../app/controllers/edkCategoriesControlle
 var edkProjectController = require('../app/controllers/edkProjectController');
 var edkSearchController = require('../app/controllers/edkSearchController');
 var edkCountersController = require('../app/controllers/edkCountersController');
+var edkGeneralInfoController = require('../app/controllers/edkGeneralInfoController');
 
 module.exports = function (app) {
     app.use(function(req, res, next) {
@@ -46,7 +47,8 @@ module.exports = function (app) {
     app.get('/counters/areas', edkCountersController.getAreasCount);
     app.get('/counters/territories', edkCountersController.getTerritoriesCount);
     app.get('/routeDetail', edkRoutesController.getRouteDetail);
-
     app.get('/searchByString', edkSearchController.getSearch);
     app.get('/areaDetail/new',  edkAreasController.getNewAreaDetail);
+    app.get('/generalInfo/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
+    app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
 }

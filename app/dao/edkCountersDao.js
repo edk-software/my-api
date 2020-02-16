@@ -23,10 +23,10 @@ module.exports = {
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkUsersRegistrationCount error: " + err);
-                    callback(err);
+                    callback(null, err);
                 } else {
                     logger.info("getEdkUsersRegistrationCount success");
-                    callback(rows);
+                    callback(rows, null);
                 }
             });
     },
@@ -51,10 +51,10 @@ module.exports = {
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRoutesCount error: " + err);
-                    callback(err);
+                    callback(null, err);
                 } else {
                     logger.info("getEdkRoutesCount success");
-                    callback(rows);
+                    callback(rows, null);
                 }
             });
     },
@@ -76,10 +76,10 @@ module.exports = {
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkAreasCount error: " + err);
-                    callback(err);
+                    callback(null, err);
                 } else {
                     logger.info("getEdkAreasCount success");
-                    callback(rows);
+                    callback(rows, null);
                 }
             });
     },
@@ -101,12 +101,51 @@ module.exports = {
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkTerritoriesCount error: " + err);
-                    callback(err);
+                    callback(null, err);
                 } else {
                     logger.info("getEdkTerritoriesCount success");
-                    callback(rows);
+                    callback(rows, null);
                 }
             });
+    },
+    getEdkCountryCount: function(){
+      return constants.countryCount;
+    },
+    waitForEdkRoutesCount:  async function (editionId, rows) {
+        await new Promise((resolve, reject) => {
+            this.getEdkRoutesCount(editionId,  (routesCount, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].routesCount = routesCount[0].routesCount;
+                }
+            });
+        });
+    },
+    waitForEdkAreasCount:  async function (editionId, rows) {
+        await new Promise((resolve, reject) => {
+            this.getEdkAreasCount(editionId,  (areasCount, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].areasCount = areasCount[0].areasCount;
+                }
+            });
+        });
+    },
+    waitForTerritoriesCount:  async function (editionId, rows) {
+        await new Promise((resolve, reject) => {
+            this.getEdkTerritoriesCount(editionId,  (territoryCount, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].groupsCount = territoryCount[0].territoriesCount;
+                }
+            });
+        });
     }
 
 };

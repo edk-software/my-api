@@ -30,6 +30,13 @@ exports.getRouteList = function (req, res) {
         });
 };
 
+exports.getRouteListForMobile = function (req, res) {
+    edkRoutesDao.getEdkRouteListForMobile(function (result) {
+            httpResponse.sendHttpResponse(result, res, "Routes  not found", "getRouteListForMobile");
+        });
+};
+
+
 
 exports.getRoutesByTeritory = function (req, res) {
     edkRoutesDao.getEdkRoutesByTerritory(req.query.territoryId, req.query.excludedRouteId, function (result) {

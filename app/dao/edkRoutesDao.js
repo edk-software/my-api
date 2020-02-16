@@ -55,9 +55,6 @@ module.exports = {
                     callback(err);
                 } else {
                     logger.info("getEdkRoute success");
-                    //callback(rows.map(row => row.));
-                    //przeparsowac
-                    //przerobic na promisy
                     callback(rows);
                 }
             });
@@ -202,6 +199,35 @@ module.exports = {
                 }
             });
     },
+    getEdkRouteListForMobile: function (callback) {
+        var sqlQuery = "SELECT t.id as groupId," +
+            " t.name as groupId," +
+            " a.id as areaId," +
+            " a.name as areaName," +
+            " r.id as routeId, " +
+            " r.name as routeName, " +
+            " r.routeFrom, r.routeTo, " +
+            " r.routeLength," +
+            " r.routeAscent" +
+            " FROM cantiga_territories t" +
+            " JOIN cantiga_areas a " +
+            " ON t.id=a.territoryId " +
+            " JOIN cantiga_edk_routes r " +
+            " ON r.areaId = a.id " +
+            " ORDER BY t.name, a.name, r.name"
+
+        connection.query(sqlQuery,
+            function (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkRouteListForMobile error: " + err);
+                    callback(err);
+                } else {
+                    logger.info("getEdkRouteListForMobile success");
+                    addFileLinks(rows);
+                    callback(rows);
+                }
+            });
+    },
     getEdkRouteAmount: function (editionId, callback) {
         var sqlQuery = "select count(1) as routeAmount " +
             " FROM cantiga_edk_routes r " +
@@ -299,6 +325,18 @@ module.exports = {
                 }
             });
     },
+    getEdkRoutesLastUpdated: function (callback) {
+        connection.query("SELECT max(updatedAt) as routesLastUpdate FROM admin_myapi.cantiga_edk_routes;",
+            function (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkRoutesLastUpdated error: " + err);
+                    callback(null, err);
+                } else {
+                    logger.info("getEdkRoutesLastUpdated success");
+                    callback(rows, null);
+                }
+            });
+    },
     waitForEdkRoutesByArea:  async function (id, rows) {
         await new Promise((resolve, reject) => {
             this.getEdkRoutesByArea(id, null, (routeRows, err) => {
@@ -310,8 +348,21 @@ module.exports = {
                 }
             });
         });
+    },
+    waitForEdkRoutesLastUpdated:  async function (rows) {
+        await new Promise((resolve, reject) => {
+            this.getEdkRoutesLastUpdated((routesLastUpdate, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].routesLastUpdate = routesLastUpdate[0].routesLastUpdate;
+                }
+            });
+        });
     }
 }
+
 
 function addFileLinks(rows) {
     rows.map(row => {
