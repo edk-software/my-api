@@ -1,6 +1,6 @@
-var connection = require('../../config/dbConnection');
+const connection = require('../../config/dbConnection');
 const logger = require('../../config/logger');
-var constants = require('../../config/constants');
+const constants = require('../../config/constants');
 const sqlQueryBuilder = require('../util/sqlQueryBuilder');
 
 module.exports = {

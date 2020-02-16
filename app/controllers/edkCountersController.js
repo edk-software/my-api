@@ -3,25 +3,25 @@ var httpResponse = require('../util/httpUtil');
 var constants = require('../../config/constants');
 
 exports.getUsersRegistrationCount = function (req, res) {
-    edkCountersDao.getEdkUsersRegistrationCount(function (result) {
+    edkCountersDao.getEdkUsersRegistrationCount(req.query.editionId, function (result) {
         httpResponse.sendHttpResponse(result, res, "There are no registered user", "getEdkUserRegistrationCount");
     });
 };
 
 exports.getRoutesCount = function (req, res) {
-    edkCountersDao.getEdkRoutesCount(function (result) {
+    edkCountersDao.getEdkRoutesCount(req.query.editionId, function (result) {
         httpResponse.sendHttpResponse(result, res, "Routes count not found", "getEdkRoutesCount");
     });
 };
 
 exports.getAreasCount = function (req, res) {
-    edkCountersDao.getEdkAreasCount(function (result) {
+    edkCountersDao.getEdkAreasCount(req.query.editionId, function (result) {
         httpResponse.sendHttpResponse(result, res, "Areas count not found", "getEdkAreasCount");
     });
 };
 
 exports.getTerritoriesCount = function (req, res) {
-    edkCountersDao.getEdkTerritoriesCount(function (result) {
+    edkCountersDao.getEdkTerritoriesCount(req.query.editionId, function (result) {
         httpResponse.sendHttpResponse(result, res, "Territories count not found", "getEdkTerritoriesCount");
     });
 };
