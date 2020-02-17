@@ -54,3 +54,10 @@ exports.getRouteDetail = function (req, res) {
         httpResponse.sendHttpResponse(result, res, "Route not found", "getRouteDetail");
     });
 };
+
+
+exports.getRoutesByUserId = function (req, res) {
+    edkRoutesDao.getEdkRoutesByUserId( req.query.userId, function (result) {
+            httpResponse.sendHttpResponse(result, res, "Routes  not found", "getRouteList");
+        });
+};

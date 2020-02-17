@@ -325,6 +325,19 @@ module.exports = {
                 }
             });
     },
+    getEdkRoutesByUserId: function (userId, callback) {
+        connection.query("select routeId from cantiga_edk_participants where id = ?;",
+            userId,
+            function (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkRoutesByUserId error: " + err);
+                    callback(null, err);
+                } else {
+                    logger.info("getEdkRoutesByUserId success");
+                    callback(rows, null);
+                }
+            });
+    },
     waitForEdkRoutesByArea:  async function (id, rows) {
         await new Promise((resolve, reject) => {
             this.getEdkRoutesByArea(id, null, (routeRows, err) => {
