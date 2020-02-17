@@ -7,3 +7,8 @@ exports.getGeneralInfoVerification = function (req, res) {
         httpResponse.sendHttpResponse(result, res, "There are no data", "getGeneralInfoVerification");
     });
 }
+    exports.getEdkAllGeneralInfo = function (req, res) {
+    edkGeneralInfoDao.getEdkAllGeneralInfo(req.query.editionId, function (result) {
+        httpResponse.sendHttpResponse(result, res, "There are no data", "getGeneralInfoVerification");
+    });
+}

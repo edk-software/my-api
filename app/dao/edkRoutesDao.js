@@ -200,30 +200,18 @@ module.exports = {
             });
     },
     getEdkRouteListForMobile: function (callback) {
-        var sqlQuery = "SELECT t.id as groupId," +
-            " t.name as groupId," +
-            " a.id as areaId," +
-            " a.name as areaName," +
-            " r.id as routeId, " +
-            " r.name as routeName, " +
-            " r.routeFrom, r.routeTo, " +
-            " r.routeLength," +
-            " r.routeAscent" +
-            " FROM cantiga_territories t" +
-            " JOIN cantiga_areas a " +
-            " ON t.id=a.territoryId " +
-            " JOIN cantiga_edk_routes r " +
-            " ON r.areaId = a.id " +
-            " ORDER BY t.name, a.name, r.name"
-
-        connection.query(sqlQuery,
-            function (err, rows, field) {
+        connection.query("SELECT max(editionId) as currentYearId FROM admin_myapi.cantiga_projects",
+            async function  (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRouteListForMobile error: " + err);
                     callback(err);
                 } else {
-                    logger.info("getEdkRouteListForMobile success");
-                    addFileLinks(rows);
+                    await edkCountersDao.waitForEdkAreasCount(rows[0].currentYearId, rows);
+                    await edkCountersDao.waitForEdkRoutesCount(rows[0].currentYearId, rows);
+                    await edkCountersDao.waitForTerritoriesCount(rows[0].currentYearId, rows);
+                    await edkRoutesDao.waitForEdkRoutesLastUpdated(rows);
+                    rows[0].countryCount = edkCountersDao.getEdkCountryCount();
+                    logger.info("getEdkRouteListForMobile success : " + rows);
                     callback(rows);
                 }
             });

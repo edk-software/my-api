@@ -50,5 +50,6 @@ module.exports = function (app) {
     app.get('/searchByString', edkSearchController.getSearch);
     app.get('/areaDetail/new',  edkAreasController.getNewAreaDetail);
     app.get('/generalInfo/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
+    app.get('/generalInfo/all',  edkGeneralInfoController.getEdkAllGeneralInfo);
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
 }
