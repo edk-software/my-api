@@ -12,6 +12,7 @@ var edkProjectController = require('../app/controllers/edkProjectController');
 var edkSearchController = require('../app/controllers/edkSearchController');
 var edkCountersController = require('../app/controllers/edkCountersController');
 var edkGeneralInfoController = require('../app/controllers/edkGeneralInfoController');
+var edkMeditationController = require('../app/controllers/edkMeditationController');
 
 module.exports = function (app) {
     app.use(function(req, res, next) {
@@ -52,4 +53,7 @@ module.exports = function (app) {
     app.get('/generalInfo/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
     app.get('/generalInfo/all',  edkGeneralInfoController.getEdkAllGeneralInfo);
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
+    app.get('/routeList/byUser', edkRoutesController.getRoutesByUserId);
+    app.get('/meditationList', edkMeditationController.getEdkMedidationList);
+    app.get('/meditationById', edkMeditationController.getEdkMeditationById);
 }
