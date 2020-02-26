@@ -48,6 +48,7 @@ module.exports = function (app) {
     app.get('/counters/areas', edkCountersController.getAreasCount);
     app.get('/counters/territories', edkCountersController.getTerritoriesCount);
     app.get('/routeDetail', edkRoutesController.getRouteDetail);
+    app.get('/routePoints', edkRoutesController.getRoutePoints);
     app.get('/searchByString', edkSearchController.getSearch);
     app.get('/areaDetail/new',  edkAreasController.getNewAreaDetail);
     app.get('/generalInfo/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);

@@ -254,6 +254,27 @@ module.exports = {
             });
     },
 
+    getEdkRoutePoints:  function (id, callback) {
+        var sqlQuery = "SELECT "+
+            " cer.elevationCharacteristic as startPoint," +
+            " cer.elevationCharacteristic as endPoint," +
+            " cer.elevationCharacteristic as stationsPoints," +
+            " cer.elevationCharacteristic as pathPoints " +
+            " from cantiga_edk_routes cer" +
+            " where cer.id=?";
+
+        connection.query(sqlQuery, [id],
+            async function  (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkRoutePoints error: " + err);
+                    callback(err);
+                } else {
+                    logger.info("getEdkRoutePoints success : " + rows);
+                    callback(rows);
+                }
+            });
+    },
+
     getEdkRouteDetail:  function (id, callback) {
         let that = this;
         var sqlQuery = "SELECT distinct ca.id as areaId," +
