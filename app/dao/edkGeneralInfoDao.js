@@ -13,14 +13,15 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
         " ca.eventDate as eventDate," +
         " ca.territoryId ," +
         " ct.name as territoryName, " +
-        "cer.id as routeId, " +
-        "cer.name as routeName, " +
-        "cer.routeLength," +
+        " cer.id as routeId, " +
+        " cer.name as routeName, " +
+        " cer.routeLength," +
         " cer.routeFrom," +
         " cer.routeTo," +
         " cer.updatedAt," +
         " cer.routeAscent, " +
         " cer.routeCourse " +
+        " cer.publicAccessSlug " +
         "FROM cantiga_areas ca " +
         "join cantiga_territories ct " +
         "on (ca.territoryId = ct.id) " +
@@ -53,10 +54,12 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
             "routeName": row.routeName,
             "routeFrom": row.routeFrom,
             "routeTo": row.routeTo,
-            "routeLength": row.routeLength,
-            "routeAscent": row.routeAscent,
+            "routeLength": row.routeLength + " km",
+            "routeAscent": row.routeAscent + " m",
             "routeDescription": row.routeCourse,
             "routeLastUpdate": row.updatedAt,
+            "routeKmlFile": row.routeKmlFile,
+            "routeDescriptionFile": row.routeDescriptionFile
         });
         parsedRows.areas.push({
             "areaId": row.areaId,
@@ -75,10 +78,12 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
             "routeName": row.routeName,
             "routeFrom": row.routeFrom,
             "routeTo": row.routeTo,
-            "routeLength": row.routeLength,
-            "routeAscent": row.routeAscent,
+            "routeLength": row.routeLength + " km",
+            "routeAscent": row.routeAscent + " m",
             "routeDescription": row.routeCourse,
             "routeLastUpdate": row.updatedAt,
+            "routeKmlFile": row.routeKmlFile,
+            "routeDescriptionFile": row.routeDescriptionFile
 
         });
 
@@ -95,6 +100,13 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
             "areas": areaList
         });
     }
+    function addFileLinks(rows) {
+        rows.map(row => {
+            var url = constants.mirror_url.replace("%HASH%", row.publicAccessSlug);
+            row.routeKmlFile = url + constants.gps_infix + "-" + row.routeId + ".kml";
+            row.routeDescriptionFile = url + constants.guide_infix + "-" + row.routeId + ".pdf";
+        });
+    }
 
     connection.query(sqlQuery,
         values, function (err, rows, field) {
@@ -104,6 +116,7 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
             } else {
                 logger.info("getEdkAreaList success ");
                 let parsedRows = [];
+                addFileLinks(rows);
                 rows.forEach(function (row) {
                     if (parsedRows.length === 0) {
                         addNewTerritoryAndArea(row, parsedRows);
@@ -122,10 +135,12 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
                                                 "routeName": row.routeName,
                                                 "routeFrom": row.routeFrom,
                                                 "routeTo": row.routeTo,
-                                                "routeLength": row.routeLength,
-                                                "routeAscent": row.routeAscent,
+                                                "routeLength": row.routeLength + " km",
+                                                "routeAscent": row.routeAscent + " m",
                                                 "routeDescription": row.routeCourse,
                                                 "routeLastUpdate": row.updatedAt,
+                                                "routeKmlFile": row.routeKmlFile,
+                                                "routeDescriptionFile": row.routeDescriptionFile
                                             });
                                         }
                                     });
