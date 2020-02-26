@@ -21,7 +21,7 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
         " cer.updatedAt," +
         " cer.routeAscent, " +
         " cer.routeCourse " +
-        "FROM admin_myapi.cantiga_areas ca " +
+        "FROM cantiga_areas ca " +
         "join cantiga_territories ct " +
         "on (ca.territoryId = ct.id) " +
         "join cantiga_area_statuses cas " +
@@ -150,7 +150,7 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
 module.exports = {
 
     getGeneralInfoVerification: function (callback) {
-        connection.query("SELECT max(editionId) as currentYearId FROM admin_myapi.cantiga_projects",
+        connection.query("SELECT max(editionId) as currentYearId FROM cantiga_projects",
             async function  (err, rows, field) {
                 if (err) {
                     logger.error("getGeneralInfoVerification error: " + err);
@@ -166,7 +166,7 @@ module.exports = {
                 }
             });
     },   getEdkAllGeneralInfo: function(editionId, callback) {
-        connection.query("SELECT max(editionId) as currentYearId FROM admin_myapi.cantiga_projects",
+        connection.query("SELECT max(editionId) as currentYearId FROM cantiga_projects",
             async function  (err, rows, field) {
                 if (err) {
                     logger.error("getEdkAllGeneralInfo error: " + err);

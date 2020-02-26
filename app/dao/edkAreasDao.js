@@ -89,7 +89,7 @@ module.exports = {
             " ca.eventDate as eventDate, ca.territoryId , ct.name as territoryName, " +
             "cer.id as routeId, cer.name as routeName, " +
             "cer.routeLength, cer.routeFrom, cer.routeTo, cer.updatedAt, cer.routeAscent " +
-            "FROM admin_myapi.cantiga_areas ca " +
+            "FROM cantiga_areas ca " +
             "join cantiga_territories ct " +
             "on (ca.territoryId = ct.id) " +
             "join cantiga_area_statuses cas " +

@@ -6,7 +6,7 @@ module.exports = {
 
     getEdkUsersRegistrationCount: function (editionId, callback) {
         let sqlQuery =  "SELECT sum(participantNum + externalParticipantNum) as participantNum" +
-            " FROM admin_myapi.cantiga_edk_registration_settings cers" +
+            " FROM cantiga_edk_registration_settings cers" +
             " join cantiga_areas ca" +
             " on ca.id = cers.areaId" +
             " join cantiga_projects cp" +

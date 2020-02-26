@@ -10,7 +10,7 @@ module.exports = {
         var sqlQuery = "SELECT " +
             "ct.id, ct.name, COUNT(DISTINCT ca.id) as areaCount, count(distinct cer.id) as routeCount, " +
             "cp.editionId " +
-            "FROM admin_myapi.cantiga_areas ca " +
+            "FROM cantiga_areas ca " +
             "join cantiga_territories ct " +
             "on (ca.territoryId = ct.id) " +
             "join cantiga_area_statuses cas " +

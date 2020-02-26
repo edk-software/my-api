@@ -139,7 +139,7 @@ module.exports = {
             "cers.participantNum, cers.externalParticipantNum, (cers.participantNum + cers.externalParticipantNum) as totalParticipants, " +
             "cers.participantLimit, cers.startTime, cers.endTime, cer.descriptionFile, SUBSTRING_INDEX(mapFile,'.',-1) as filePostFix, cer.gpsTrackFile, cer.publicAccessSlug, " +
             "cer.mapUpdatedAt, cer.descriptionUpdatedAt, cer.gpsUpdatedAt " +
-            "FROM admin_myapi.cantiga_areas ca " +
+            "FROM cantiga_areas ca " +
             "join cantiga_territories ct " +
             "on (ca.territoryId = ct.id) " +
             "join cantiga_area_statuses cas " +
@@ -200,7 +200,7 @@ module.exports = {
             });
     },
     getEdkRouteListForMobile: function (callback) {
-        connection.query("SELECT max(editionId) as currentYearId FROM admin_myapi.cantiga_projects",
+        connection.query("SELECT max(editionId) as currentYearId FROM cantiga_projects",
             async function  (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRouteListForMobile error: " + err);
@@ -315,7 +315,7 @@ module.exports = {
             });
     },
     getEdkRoutesLastUpdated: function (callback) {
-        connection.query("SELECT max(updatedAt) as routesLastUpdate FROM admin_myapi.cantiga_edk_routes;",
+        connection.query("SELECT max(updatedAt) as routesLastUpdate FROM cantiga_edk_routes;",
             function (err, rows, field) {
                 if (err) {
                     logger.error("getEdkRoutesLastUpdated error: " + err);
@@ -368,9 +368,10 @@ module.exports = {
 
 function addFileLinks(rows) {
     rows.map(row => {
-        row.mirror_url_gps = constants.mirror_url.replace("%HASH%", row.publicAccessSlug) + constants.gps_infix + "-" + row.routeId + ".kml";
-        row.mirror_url_map = constants.mirror_url + constants.map_infix + "-" + row.routeId + "." + row.filePostFix;
-        row.mirror_url_guide = constants.mirror_url + constants.guide_infix + "-" + row.routeId + ".pdf";
+        var url = constants.mirror_url.replace("%HASH%", row.publicAccessSlug);
+        row.mirror_url_gps = url + constants.gps_infix + "-" + row.routeId + ".kml";
+        row.mirror_url_map = url + constants.map_infix + "-" + row.routeId + "." + row.filePostFix;
+        row.mirror_url_guide = url + constants.guide_infix + "-" + row.routeId + ".pdf";
         delete row.filePostFix;
     });
 }
