@@ -278,6 +278,8 @@ module.exports = {
             " cer.updatedAt," +
             " cer.gpsUpdatedAt," +
             " cer.mapUpdatedAt," +
+            " SUBSTRING_INDEX(cer.mapFile,'.',-1) as filePostFix," +
+            " cer.publicAccessSlug," +
             " cer.descriptionUpdatedAt," +
             " cers.participantNum + cers.externalParticipantNum as participantAmount," +
             " cers.startTime," +
@@ -366,9 +368,9 @@ module.exports = {
 
 function addFileLinks(rows) {
     rows.map(row => {
-        row.mirror_url_gps = constants.mirror_url + constants.gps_infix + "-" + row.routeId + "." + row.filePostFix;
+        row.mirror_url_gps = constants.mirror_url.replace("%HASH%", row.publicAccessSlug) + constants.gps_infix + "-" + row.routeId + ".kml";
         row.mirror_url_map = constants.mirror_url + constants.map_infix + "-" + row.routeId + "." + row.filePostFix;
-        row.mirror_url_guide = constants.mirror_url + constants.guide_infix + "-" + row.routeId + "." + row.filePostFix;
+        row.mirror_url_guide = constants.mirror_url + constants.guide_infix + "-" + row.routeId + ".pdf";
         delete row.filePostFix;
     });
 }
