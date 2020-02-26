@@ -111,11 +111,11 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
                         let isTerritoryExist = false;
                         let isAreaExist = false;
                         parsedRows.forEach(function (parsedRow) {
-                            if (parsedRow.territoryId == row.territoryId) {
+                            if (parsedRow.groupId == row.territoryId) {
                                 isTerritoryExist = true;
                                 if (parsedRow.areas && parsedRow.areas.length > 0) {
                                     parsedRow.areas.forEach(function (area) {
-                                        if (area.areaName == row.areaName) {
+                                        if (area.areaId == row.areaId) {
                                             isAreaExist = true;
                                             area.routes.push({
                                                 "routeId": row.routeId,
