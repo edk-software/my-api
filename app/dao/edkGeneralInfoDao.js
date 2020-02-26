@@ -20,7 +20,7 @@ function getRoutesGroupByAreaGroupByTerritory(editionId, callback) {
         " cer.routeTo," +
         " cer.updatedAt," +
         " cer.routeAscent, " +
-        " cer.routeCourse " +
+        " cer.routeCourse, " +
         " cer.publicAccessSlug " +
         "FROM cantiga_areas ca " +
         "join cantiga_territories ct " +
