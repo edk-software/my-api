@@ -261,7 +261,6 @@ module.exports = {
             " ca.lat," +
             " ca.lng," +
             " ca.eventDate," +
-            " ca.massDate," +
             " ct.id as territoryId," +
             " ct.name as territoryName," +
             " cer.id as routeId," +
