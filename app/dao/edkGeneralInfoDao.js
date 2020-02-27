@@ -1,6 +1,7 @@
 const connection = require('../../config/dbConnection');
 const logger = require('../../config/logger');
 const edkCountersDao = require('./edkCountersDao');
+const edkMeditationDao = require('./edkMeditationDao');
 const edkRoutesDao = require('./edkRoutesDao');
 const constants = require('../../config/constants');
 
@@ -176,6 +177,7 @@ module.exports = {
                     await edkCountersDao.waitForTerritoriesCount(rows[0].currentYearId, rows);
                     await edkRoutesDao.waitForEdkRoutesLastUpdated(rows);
                     rows[0].countryCount = edkCountersDao.getEdkCountryCount();
+                    await edkMeditationDao.waitForMeditationLastUpdated(rows);
                     logger.info("getGeneralInfoVerification success : " + rows);
                     callback(rows);
                 }

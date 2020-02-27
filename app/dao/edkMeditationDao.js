@@ -118,5 +118,32 @@ module.exports = {
                 }
             });
     },
+    waitForMeditationLastUpdated:  async function (rows) {
+        await new Promise((resolve, reject) => {
+            this.getMeditiationLastUpdated((meditation, err) => {
+                if(err) {
+                    reject();
+                } else {
+                    resolve();
+                    rows[0].meditationsLastUpdate = meditation[0].meditationsLastUpdate;
+                    rows[0].currentMeditationsName = meditation[0].currentMeditationsName;
+                    rows[0].currentMeditationsParentId = meditation[0].currentMeditationsParentId;
+                }
+            });
+        });
+    },
+
+    getMeditiationLastUpdated: function (callback) {
+        connection.query("SELECT updatedAt as meditationsLastUpdate, name as currentMeditationsName, id as currentMeditationsParentId FROM meditation_project ORDER BY updatedAt DESC LIMIT 1;",
+            function (err, rows, field) {
+                if (err) {
+                    logger.error("getMeditationsLastUpdate error: " + err);
+                    callback(null, err);
+                } else {
+                    logger.info("getMeditationsLastUpdate success");
+                    callback(rows, null);
+                }
+            });
+    },
 
 };

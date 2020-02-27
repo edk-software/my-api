@@ -48,13 +48,13 @@ module.exports = function (app) {
     app.get('/counters/areas', edkCountersController.getAreasCount);
     app.get('/counters/territories', edkCountersController.getTerritoriesCount);
     app.get('/routeDetail', edkRoutesController.getRouteDetail);
-    app.get('/routePoints', edkRoutesController.getRoutePoints);
     app.get('/searchByString', edkSearchController.getSearch);
     app.get('/areaDetail/new',  edkAreasController.getNewAreaDetail);
-    app.get('/generalInfo/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
-    app.get('/generalInfo/all',  edkGeneralInfoController.getEdkAllGeneralInfo);
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
-    app.get('/routeList/byUser', edkRoutesController.getRoutesByUserId);
-    app.get('/meditationList', edkMeditationController.getEdkMedidationList);
-    app.get('/meditationById', edkMeditationController.getEdkMeditationById);
+    app.get('/mobile/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
+    app.get('/mobile/allGeneralInfo',  edkGeneralInfoController.getEdkAllGeneralInfo);
+    app.get('/mobile/routePoints', edkRoutesController.getRoutePoints);
+    app.get('/mobile/routeList/byUser', edkRoutesController.getRoutesByUserId);
+    app.get('/mobile/meditationList', edkMeditationController.getEdkMedidationList);
+    app.get('/mobile/meditationById', edkMeditationController.getEdkMeditationById);
 }
