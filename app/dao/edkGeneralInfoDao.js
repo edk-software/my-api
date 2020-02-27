@@ -172,10 +172,10 @@ module.exports = {
                     logger.error("getGeneralInfoVerification error: " + err);
                     callback(err);
                 } else {
-                    await edkCountersDao.waitForEdkAreasCount(rows[0].currentYearId, rows);
-                    await edkCountersDao.waitForEdkRoutesCount(rows[0].currentYearId, rows);
-                    await edkCountersDao.waitForTerritoriesCount(rows[0].currentYearId, rows);
                     await edkRoutesDao.waitForEdkRoutesLastUpdated(rows);
+                    await edkCountersDao.waitForEdkRoutesCount(rows[0].currentYearId, rows);
+                    await edkCountersDao.waitForEdkAreasCount(rows[0].currentYearId, rows);
+                    await edkCountersDao.waitForTerritoriesCount(rows[0].currentYearId, rows);
                     rows[0].countryCount = edkCountersDao.getEdkCountryCount();
                     await edkMeditationDao.waitForMeditationLastUpdated(rows);
                     logger.info("getGeneralInfoVerification success : " + rows);

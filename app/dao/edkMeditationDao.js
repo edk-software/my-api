@@ -81,7 +81,7 @@ module.exports = {
             " stationId," +
             " placeId, " +
             " audioFileUrl, " +
-            " text" +
+            " meditationText" +
             " from meditation_station" +
             " where meditationId = ?";
 
@@ -93,7 +93,7 @@ module.exports = {
                 "stationId": row.stationId,
                 "placeId": row.placeId,
                 "audioFileUrl": row.audioFileUrl,
-                "text": row.text,
+                "text": row.meditationText,
             });
         };
 
@@ -124,10 +124,10 @@ module.exports = {
                 if(err) {
                     reject();
                 } else {
-                    resolve();
-                    rows[0].meditationsLastUpdate = meditation[0].meditationsLastUpdate;
-                    rows[0].currentMeditationsName = meditation[0].currentMeditationsName;
+                    resolve();                    
                     rows[0].currentMeditationsParentId = meditation[0].currentMeditationsParentId;
+                    rows[0].currentMeditationsName = meditation[0].currentMeditationsName;
+                    rows[0].meditationsLastUpdate = meditation[0].meditationsLastUpdate;
                 }
             });
         });
