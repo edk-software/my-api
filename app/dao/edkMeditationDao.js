@@ -89,6 +89,7 @@ module.exports = {
             parsedRows[0].stations.push({
                 "title": row.title,
                 "id": row.id,
+                "author": row.author,
                 "authorBio": row.authorBio,
                 "stationId": row.stationId,
                 "placeId": row.placeId,
