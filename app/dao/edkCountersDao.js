@@ -36,9 +36,11 @@ module.exports = {
             " from cantiga_edk_routes cer" +
             " join cantiga_areas ca" +
             " on ca.id = cer.areaId" +
+            " join cantiga_area_statuses cas" +
+            " on ca.statusId = cas.id" +
             " join cantiga_projects cp" +
             " on cp.id = ca.projectId" +
-            " where cp.editionId=?";
+            " where cas.isPublish = 1 AND cer.approved = 1 AND cp.editionId=?";
         let values = [];
 
         if(editionId){
@@ -60,11 +62,13 @@ module.exports = {
     },
 
     getEdkAreasCount: function (editionId, callback) {
-        let sqlQuery =  "SELECT count(1) as areasCount"
-        +" from cantiga_areas ca"
-        + " join cantiga_projects cp"
-        + " on cp.id = ca.projectId"
-        + " where cp.editionId=?";
+        let sqlQuery =  "SELECT count(1) as areasCount" +
+        " from cantiga_areas ca" +
+        " join cantiga_area_statuses cas" +
+        " on ca.statusId = cas.id" +
+        " join cantiga_projects cp" +
+        " on cp.id = ca.projectId" +
+        " where cas.isPublish = 1 AND cp.editionId=?";
         let values = [];
 
         if(editionId){
