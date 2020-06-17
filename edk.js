@@ -25,19 +25,10 @@ app.use(cookieParser()); // read cookies (needed for auth)
 
 
 
-dbConnection.connect(function(err) {
-    if (err) throw err;
+dbConnection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+    if (error) throw error;
+    console.log('Successfully started connection pool: ', results[0].solution);
 });
-
-
-dbConnection.query('SET SESSION group_concat_max_len=10000000',
-     function (err, rows, field) {
-        if (err) {
-            logger.error("set concat max_length error: " +err);
-        } else {
-            logger.info("set concat max_length success");
-        }
-    });
 
 
 // routes ======================================================================
