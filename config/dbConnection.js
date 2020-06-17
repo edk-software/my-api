@@ -1,6 +1,5 @@
 var mysql = require('mysql');
 
-
 var connection = mysql.createPool({
     connectionLimit: 10,
     host:'dbHostShouldGoHere',

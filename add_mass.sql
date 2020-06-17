@@ -1,0 +1,1 @@
+alter table cantiga_areas add column massDate INT(11);
