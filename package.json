@@ -37,6 +37,8 @@
     "request": "latest",
     "serve-favicon": "~2.3.0",
     "simple-encryptor": "latest",
+    "swagger-jsdoc": "^4.0.0",
+    "swagger-ui-express": "^4.1.4",
     "underscore": "latest",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2"

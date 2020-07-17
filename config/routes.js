@@ -21,14 +21,174 @@ module.exports = function (app) {
         res.removeHeader("X-Powered-By");
         next();
     });
+
+
+    /**
+     * @swagger
+     * /routes:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: id
+     *        type: integer
+     *        description: get routes by id
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get routes by edition id
+     *    description: Use request to get  routes
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/routes', edkRoutesController.getRoutes);
+    /**
+     * @swagger
+     * /areas:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: territoryId
+     *        type: integer
+     *        description: get area by territoryId
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get area by editionId
+     *      - in: query
+     *        name: eventDate
+     *        type: integer
+     *        description: get area event date
+     *      - in: query
+     *        name: orderByAreaName
+     *        type: boolean
+     *        description: order by areaName
+     *      - in: query
+     *        name: orderByTerritoryName
+     *        type: integer
+     *        description: order by orderByTerritoryName
+     *      - in: query
+     *        name: searchAreaName
+     *        type: string
+     *        description: get area by name
+     *    description: Use request to get areas
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/areas', edkAreasController.getAreas);
-    app.get('/areasDetail/:id', edkAreasController.getAreasDetail);
+    /**
+     * @swagger
+     * /areasDetail:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: id
+     *        type: integer
+     *        description: get area by id
+     *    description: Use request to get one detailed area using specific id
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
+    app.get('/areasDetail', edkAreasController.getAreasDetail);
+    /**
+     * @swagger
+     * /routeByArea:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: areaId
+     *        type: integer
+     *        description: get route by areaId
+     *    description: Use request to get one detailed area using specific id
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/routeByArea', edkRoutesController.getRoutesByArea);
     app.get('/routeByTerritory', edkRoutesController.getRoutesByTeritory);
     app.get('/registrations/:id', edkRegistrationsController.getRegistrations);
-    app.get('/areaList', edkAreasController.getAreaList);
+    app.get('/areaRoutesList', edkAreasController.getEdkAreaRoutesList);
+    /**
+     * @swagger
+     * /routeList:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: territoryId
+     *        type: integer
+     *        description: get route by territoryId
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get route by editionId
+     *      - in: query
+     *        name: areaId
+     *        type: integer
+     *        description: get route by areaId
+     *      - in: query
+     *        name: eventDate
+     *        type: integer
+     *        description: get area event date
+     *      - in: query
+     *        name: orderByTerritoryName
+     *        type: boolean
+     *        description: order by orderByTerritoryName
+     *      - in: query
+     *        name: orderByRouteName
+     *        type: boolean
+     *        description: order by orderByRouteName
+     *      - in: query
+     *        name: orderByRouteLength
+     *        type: boolean
+     *        description: order by orderByRouteLength
+     *      - in: query
+     *        name: orderByEventDate
+     *        type: boolean
+     *        description: order by orderByEventDate
+     *      - in: query
+     *        name: searchByRouteName
+     *        type: string
+     *        description: get route using searchByRouteName
+     *    description: Use request to get route
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
+
     app.get('/routeList', edkRoutesController.getRouteList);
+
+    /**
+     * @swagger
+     * /territoryList:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get territory by editionId
+     *      - in: query
+     *        name: eventDate
+     *        type: integer
+     *        description: get territory event date
+     *      - in: query
+     *        name: orderByTerritoryId
+     *        type: boolean
+     *        description: order by orderByTerritoryId
+     *      - in: query
+     *        name: orderByTerritoryName
+     *        type: boolean
+     *        description: order by orderByTerritoryName
+     *      - in: query
+     *        name: searchByTerritoryName
+     *        type: string
+     *        description: get territory by searchByTerritoryName
+     *    description: Use request to get areas
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/territoryList', edkTerritoryController.getTerritoryList);
     app.get('/registrationSettings', edkRegistrationSettingsController.getRegistrationSettings);
     app.get('/areasByTerritory', edkAreasController.getAreasByTerritory);

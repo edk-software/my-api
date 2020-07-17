@@ -24,7 +24,7 @@ exports.getRoutesByArea = function (req, res) {
 exports.getRouteList = function (req, res) {
     edkRoutesDao.getEdkRouteList(req.query.territoryId, req.query.editionId, req.query.areaId, req.query.eventDate,
         req.query.orderByTerritoryName, req.query.orderByRouteName, req.query.orderByRouteLength,
-        req.query.orderByEventDate,
+        req.query.orderByEventDate, req.query.searchByRouteName,
         function (result) {
             httpResponse.sendHttpResponse(result, res, "Routes  not found", "getRouteList");
         });

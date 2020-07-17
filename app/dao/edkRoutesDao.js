@@ -133,7 +133,7 @@ module.exports = {
     },
     getEdkRouteList: function (territoryId, editionId, areaId, eventDate,
         orderByTerritoryName, orderByRouteName, orderByRouteLength,
-        orderByEventDate, callback) {
+        orderByEventDate, searchByRouteName, callback) {
         var sqlQuery = "select ca.id as areaId, ca.name as areaName,  ca.eventDate, ca.territoryId, ct.name, cer.id as routeId, cer.name as routeName, " +
             "cer.routeLength, cer.routeFrom, cer.routeTo, cer.updatedAt, cer.routeAscent, " +
             "cers.participantNum, cers.externalParticipantNum, (cers.participantNum + cers.externalParticipantNum) as totalParticipants, " +
@@ -168,6 +168,10 @@ module.exports = {
             values.push(constants.defaultEditionId);
         }
 
+        if (searchByRouteName) {
+            conditions.push(" cer.name like ? ");
+            values.push("%" + searchByRouteName + "%");
+        }
         var orderByConditions = [];
 
         var orderBySqlQuery = " order by ";

@@ -2,6 +2,29 @@ var express = require('express');
 const logger = require('./config/logger');
 
 var app = express();
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        info: {
+            version: "1.0.0",
+            title: "Customer API",
+            description: "Customer API Information",
+            contact: {
+                name: "Amazing Developer"
+            },
+            servers: ["http://localhost:5000"]
+        }
+    },
+    // ['.config/*.js']
+    apis: ["config/routes.js"]
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 var multer = require('multer')
 var constants = require('constants');
 var constant = require('./config/constants');
