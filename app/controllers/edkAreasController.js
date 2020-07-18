@@ -21,3 +21,10 @@ exports.getAreaDetail = function (req, res) {
         httpResponse.sendHttpResponse(result, res, "Area not found", "getAreaDetail");
     });
 };
+
+
+exports.getEdkDates = function (req, res) {
+    edkAreasDao.getEdkDates(req.query.projectId, function (result) {
+        httpResponse.sendHttpResponse(result, res, "No edk dates found", "getEdkDates");
+    });
+};

@@ -192,6 +192,21 @@ module.exports = function (app) {
     app.get('/search', edkSearchController.getSearch);
 
     app.get('/areaDetail',  edkAreasController.getAreaDetail);
+    /**
+     * @swagger
+     * /edkDates:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: projectId
+     *        type: string
+     *        description: get edk dates by projectId
+     *    description: Use request to edk dates
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
+    app.get('/edkDates',  edkAreasController.getEdkDates);
 
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
     app.get('/mobile/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);

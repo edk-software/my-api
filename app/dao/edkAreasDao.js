@@ -123,5 +123,30 @@ module.exports = {
                     callback(rows);
                 }
             });
+    },
+    getEdkDates: function (projectId, callback) {
+        let sqlQuery = "SELECT dat, UNIX_TIMESTAMP(dat) as filterId " +
+            "FROM ";
+
+        let innerSqlQuery =   "(SELECT from_unixtime(eventDate, '%Y-%m-%d') as dat " +
+            "FROM cantiga_areas ";
+        if(projectId) {
+            innerSqlQuery += "WHERE projectId = ? ";
+        }
+
+         innerSqlQuery += "ORDER BY eventDate) tbl ";
+
+        let sqlGroupBySql = "GROUP BY dat ";
+
+        sqlQuery = sqlQuery + innerSqlQuery + sqlGroupBySql;
+        connection.query(
+            sqlQuery, [projectId], async function (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkDates error: " + err);
+                    callback(err);
+                } else {
+                    callback(rows);
+                }
+            });
     }
 }
