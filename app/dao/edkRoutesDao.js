@@ -134,7 +134,7 @@ module.exports = {
     getEdkRouteList: function (territoryId, editionId, areaId, eventDate,
         orderByTerritoryName, orderByRouteName, orderByRouteLength,
         orderByEventDate, searchByRouteName, callback) {
-        var sqlQuery = "select ca.id as areaId, ca.name as areaName,  ca.eventDate, ca.territoryId, ct.name, cer.id as routeId, cer.name as routeName, " +
+        var sqlQuery = "select ca.id as areaId, ca.name as areaName,  ca.eventDate, ca.territoryId, ct.name as territoryName, cer.id as routeId, cer.name as routeName, " +
             "cer.routeLength, cer.routeFrom, cer.routeTo, cer.updatedAt, cer.routeAscent, " +
             "cers.participantNum, cers.externalParticipantNum, (cers.participantNum + cers.externalParticipantNum) as totalParticipants, " +
             "cers.participantLimit, cers.startTime, cers.endTime, cer.descriptionFile, SUBSTRING_INDEX(mapFile,'.',-1) as filePostFix, cer.gpsTrackFile, cer.publicAccessSlug, " +

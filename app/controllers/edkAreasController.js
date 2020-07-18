@@ -39,8 +39,8 @@ exports.getAreaAmount = function (req, res) {
     });
 };
 
-exports.getNewAreaDetail = function (req, res) {
-    edkAreasDao.getNewAreaDetail(req.query.id, function (result) {
-        httpResponse.sendHttpResponse(result, res, "Area not found", "getNewAreaDetail");
+exports.getAreaDetail = function (req, res) {
+    edkAreasDao.getAreaDetail(req.query.id, function (result) {
+        httpResponse.sendHttpResponse(result, res, "Area not found", "getAreaDetail");
     });
 };

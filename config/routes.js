@@ -76,7 +76,7 @@ module.exports = function (app) {
      *      '200':
      *        description: A successful response
      */
-    app.get('/areas', edkAreasController.getAreas);
+    app.get('/areasList', edkAreasController.getAreas);
     /**
      * @swagger
      * /areasDetail:
@@ -92,24 +92,11 @@ module.exports = function (app) {
      *        description: A successful response
      */
     app.get('/areasDetail', edkAreasController.getAreasDetail);
-    /**
-     * @swagger
-     * /routeByArea:
-     *  get:
-     *    parameters:
-     *      - in: query
-     *        name: areaId
-     *        type: integer
-     *        description: get route by areaId
-     *    description: Use request to get one detailed area using specific id
-     *    responses:
-     *      '200':
-     *        description: A successful response
-     */
-    app.get('/routeByArea', edkRoutesController.getRoutesByArea);
-    app.get('/routeByTerritory', edkRoutesController.getRoutesByTeritory);
-    app.get('/registrations/:id', edkRegistrationsController.getRegistrations);
-    app.get('/areaRoutesList', edkAreasController.getEdkAreaRoutesList);
+
+     // app.get('/routeByArea', edkRoutesController.getRoutesByArea);
+    // app.get('/routeByTerritory', edkRoutesController.getRoutesByTeritory);
+   // app.get('/registrations/:id', edkRegistrationsController.getRegistrations);
+    // app.get('/areaRoutesList', edkAreasController.getEdkAreaRoutesList);
     /**
      * @swagger
      * /routeList:
@@ -190,26 +177,52 @@ module.exports = function (app) {
      *        description: A successful response
      */
     app.get('/territoryList', edkTerritoryController.getTerritoryList);
-    app.get('/registrationSettings', edkRegistrationSettingsController.getRegistrationSettings);
-    app.get('/areasByTerritory', edkAreasController.getAreasByTerritory);
-    app.get('/reflections', edkReflectionsController.getReflections);
-    app.get('/languages', edkLanguageController.getLanguage);
-    app.get('/testimonies', edkTestimoniesController.getTestimonies);
-    app.get('/randomTestimonies', edkTestimoniesController.getRandomTestimonies);
-    app.get('/prompts', edkPromptController.getPrompts);
-    app.get('/promptsDetail', edkPromptController.getPromptsDetail);
-    app.get('/categories', edkCategoriesController.getCategories);
+   // app.get('/registrationSettings', edkRegistrationSettingsController.getRegistrationSettings);
+   // app.get('/areasByTerritory', edkAreasController.getAreasByTerritory);
+
+
+
+    // app.get('/reflections', edkReflectionsController.getReflections);
+    // app.get('/languages', edkLanguageController.getLanguage);
+    // app.get('/testimonies', edkTestimoniesController.getTestimonies);
+    // app.get('/randomTestimonies', edkTestimoniesController.getRandomTestimonies);
+
+    // app.get('/prompts', edkPromptController.getPrompts);
+   // app.get('/promptsDetail', edkPromptController.getPromptsDetail);
+   // do smieci app.get('/categories', edkCategoriesController.getCategories);
+
     app.get('/projects', edkProjectController.getProjects);
-    app.get('/routeAmount', edkRoutesController.getRouteAmount);
-    app.get('/areaAmount', edkAreasController.getAreaAmount);
+
+ //do smieci   app.get('/routeAmount', edkRoutesController.getRouteAmount);
+
+  //do smieci  app.get('/areaAmount', edkAreasController.getAreaAmount);
+
     app.get('/counters/country', edkCountersController.getCountryCount);
     app.get('/counters/usersRegistration', edkCountersController.getUsersRegistrationCount);
     app.get('/counters/routes', edkCountersController.getRoutesCount);
     app.get('/counters/areas', edkCountersController.getAreasCount);
     app.get('/counters/territories', edkCountersController.getTerritoriesCount);
+
     app.get('/routeDetail', edkRoutesController.getRouteDetail);
-    app.get('/searchByString', edkSearchController.getSearch);
-    app.get('/areaDetail/new',  edkAreasController.getNewAreaDetail);
+
+    /**
+     * @swagger
+     * /search:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: search
+     *        type: string
+     *        description: get areas, routes and territories by given input
+     *    description: Use request to get areas, routes and territories
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
+    app.get('/search', edkSearchController.getSearch);
+
+    app.get('/areaDetail',  edkAreasController.getAreaDetail);
+
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
     app.get('/mobile/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
     app.get('/mobile/allGeneralInfo',  edkGeneralInfoController.getEdkAllGeneralInfo);

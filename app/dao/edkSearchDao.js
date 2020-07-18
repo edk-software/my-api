@@ -1,83 +1,79 @@
-var connection = require('../../config/dbConnection');
+const connection = require('../../config/dbConnection');
 const logger = require('../../config/logger');
 
+const edkAreasDao = require('./edkAreasDao')
+const edkRoutesDao = require('./edkRoutesDao');
+const edkTerritoryDao = require('./edkTerritoryDao');
+
 module.exports = {
-
-
-    getEdkSearch: function (textSearch, callback) {
-        let result = {
-            isRoutesQueryFinished: false,
-            isAreaQueryFinished: false,
-            isTerritoryFinished: false,
-            rows: []
-        }
-        searchByRoutes(textSearch, callback, result);
-        searchByAreas(textSearch, callback, result);
-        searchByTerritories(textSearch, callback, result);
+    getEdkSearch: async function (textSearch, callback) {
+        let routes = await waitForSearchByRoutes(textSearch);
+        let areas = await waitForSearchByAreas(textSearch);
+        let territories = await waitForSearchByByTerritory(textSearch);
+        callback([...routes, ...areas, ...territories]);
     }
 }
 
- function searchByAreas(textSearch, callback, result) {
-    var sqlQuery = "SELECT ca.name as area_name, 'areas'"
-        + " FROM cantiga_areas ca"
-        + " WHERE ca.name"
-        + " LIKE '%" + textSearch + "%'";
-    connection.query(sqlQuery,
-         function (err, rows, field) {
-            result.isAreaQueryFinished = true;
-            if (err) {
-                logger.error("getEdkSearch error: " +err);
-                callback(err);
-            } else {
-                logger.info("getEdkSearch success" );
-                result.rows = result.rows.concat(rows);
-                if(result.isRoutesQueryFinished && result.isTerritoryFinished) {
-                    callback(result.rows);
+async function waitForSearchByRoutes(textSearch) {
+    let routes = await new Promise((resolve, reject) => {
+        edkRoutesDao.getEdkRouteList(null, null, null, null, null, null, null, null, textSearch, handlePromise(reject, resolve));
+    });
+    return mapResult(routes, (routes) => routes
+        .map(route => {
+            return {
+                name: route.routeName,
+                type: 'route',
+                details: {
+                    areaName: route.areaName,
+                    territoryName: route.territoryName,
+                    lent: route.routeLength
                 }
             }
+        }))
+}
+
+async function waitForSearchByByTerritory(textSearch) {
+    let territories = await new Promise((resolve, reject) => {
+        edkTerritoryDao.getEdkTerritoryList(null, null, null, null, textSearch, handlePromise(reject, resolve));
+    });
+    return mapResult(territories, (territories) => territories)
+        .map(territory => {
+            return {
+                name: territory.name,
+                type: "territory",
+                details: {areaCount: territory.areasCount, routesCount: territory.routesCount}
+
+            }
         });
-};
+}
 
- function searchByRoutes(textSearch, callback, result) {
-    var sqlQuery = "SELECT r.name as route_name, 'routes'"
-        + " FROM cantiga_edk_routes r"
-        + " WHERE r.name"
-        + " LIKE '%" + textSearch + "%'";
-    connection.query(sqlQuery,
-         function (err, rows, field) {
-             result.isRoutesQueryFinished = true;
-             if (err) {
-                 logger.error("getEdkSearch error: " +err);
-                 callback(err);
-             } else {
-                 logger.info("getEdkSearch success" );
-                 result.rows = result.rows.concat(rows);
-                 if(result.isAreaQueryFinished  && result.isTerritoryFinished) {
-                     callback(result.rows);
-                 }
-             }
-        });
- }
+async function waitForSearchByAreas(textSearch) {
+    let areas = await new Promise((resolve, reject) => {
+        edkAreasDao.getEdkAreas(null, null, null, null, null, null, textSearch, handlePromise(reject, resolve));
+    });
+    return mapResult(areas, (areas) => areas
+        .map(area => {
+            return {
+                name: area.areaName,
+                type: "area",
+                details: {routesCount: area.routesCount, territoryName: area.territoryName}
+            }
+        }));
+}
 
- function searchByTerritories(textSearch, callback, result) {
-     var sqlQuery = "SELECT ct.name as territoryName, 'territories'"
-         + " FROM cantiga_territories ct"
-         + " WHERE ct.name"
-         + " LIKE '%" + textSearch + "%'";
-     connection.query(sqlQuery,
-         function (err, rows, field) {
-             result.isTerritoryFinished = true;
-             if (err) {
-                 logger.error("getEdkSearch error: " + err);
-                 callback(err);
-             } else {
-                 logger.info("getEdkSearch success");
-                 result.rows = result.rows.concat(rows);
-                 if (result.isAreaQueryFinished && result.isRoutesQueryFinished) {
-                     callback(result.rows);
-                 }
-             }
-         });
- }
+function handlePromise(reject, resolve) {
+    return (result, err) => {
+        if (err) {
+            reject();
+        } else {
+            resolve(result);
+        }
+    };
+}
 
-
+function mapResult(result, mapResult) {
+    if (result !== null && Array.isArray(result)) {
+        return mapResult(result);
+    }
+    return [];
+}

@@ -8,7 +8,7 @@ module.exports = {
     getEdkTerritoryList: function (editionId, eventDate, orderByTerritoryId, orderByTerritoryName, searchByTerritoryName, callback) {
 
         var sqlQuery = "SELECT " +
-            "ct.id, ct.name, COUNT(DISTINCT ca.id) as areaCount, count(distinct cer.id) as routeCount, " +
+            "ct.id, ct.name, COUNT(DISTINCT ca.id) as areasCount, count(distinct cer.id) as routesCount, " +
             "cp.editionId " +
             "FROM cantiga_areas ca " +
             "join cantiga_territories ct " +
@@ -25,15 +25,12 @@ module.exports = {
         var values = [];
         conditions.push(" and cp.editionId=?");
 
-        logger.info("before eventDate", eventDate);
-
         if (editionId) {
             values.push(editionId);
         } else {
             values.push(constants.defaultEditionId);
         }
 
-        logger.info("before eventDate", eventDate);
         if (eventDate) {
             conditions.push(" and ca.eventDate=?");
             values.push(eventDate);
@@ -45,7 +42,6 @@ module.exports = {
             values.push("%" + searchByTerritoryName + "%");
         }
 
-        logger.info("beforeSqlGroup");
         var sqlGroupBySql = " group by ct.id, ct.name ";
 
         var orderByConditions = [];
@@ -71,7 +67,6 @@ module.exports = {
                     logger.error("getEdkTerritoryList error: " + err);
                     callback(err);
                 } else {
-                    logger.info("getEdkTerritoryList success");
                     callback(rows);
                 }
             });

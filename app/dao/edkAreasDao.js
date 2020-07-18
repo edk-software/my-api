@@ -11,8 +11,9 @@ module.exports = {
     getEdkAreas: function (territoryId, editionId, eventDate, orderByAreaName, orderByTerritoryName,
                            orderByEventDate, searchAreaName, callback) {
         var sqlQuery = "SELECT " +
-            "ca.id as areaId, ca.name as areaName, ca.lat as latitude, ca.lng as longitude," +
-            " ca.eventDate as eventDate, ca.territoryId , ct.name as territoryName " +
+            "ca.id as areaId, ca.name as areaName, ca.lat as latitude, ca.lng as longitude, " +
+            "ca.eventDate as eventDate, ca.territoryId , ct.name as territoryName, " +
+            "count(DISTINCT cer.id) as routesCount " +
             "FROM cantiga_areas ca " +
             "join cantiga_territories ct " +
             "on (ca.territoryId = ct.id) " +
@@ -49,16 +50,19 @@ module.exports = {
             values.push(constants.defaultEditionId);
         }
 
-        var orderByConditions = [];
+        let orderByConditions = [];
 
-        var orderBySqlQuery = " order by ";
+        let sqlGroupBySql = " group by areaId ";
+
+        let orderBySqlQuery = " order by ";
+
 
         sqlQueryBuilder.addOrderByCondition(orderByConditions, "ca.name", orderByAreaName);
         sqlQueryBuilder.addOrderByCondition(orderByConditions, "ct.name", orderByTerritoryName);
         sqlQueryBuilder.addOrderByCondition(orderByConditions, "ca.eventDate", orderByEventDate);
 
         sqlQuery = sqlQuery + (conditions.length ?
-            conditions.join(' ') : '');
+            conditions.join(' ') : '') + sqlGroupBySql;
 
         if (orderByConditions.length > 0) {
 
@@ -74,7 +78,6 @@ module.exports = {
                     logger.error("getEdkAreaList error: " + err);
                     callback(err);
                 } else {
-                    logger.info("getEdkAreaList success ");
                     callback(rows);
                 }
             });
@@ -91,7 +94,6 @@ module.exports = {
                 logger.error("getEdkAreasDetail error: " + err);
                 callback(err);
             } else {
-                logger.info("getEdkAreasDetail success : " + rows);
                 callback(rows);
             }
         });
@@ -107,7 +109,6 @@ module.exports = {
                     logger.error("getEdkAreasByTerritory error: " + err);
                     callback(err);
                 } else {
-                    logger.info("getEdkAreasByTerritory success : " + rows);
                     callback(rows);
                 }
             });
@@ -263,12 +264,11 @@ module.exports = {
                     logger.error("getEdkAreaAmount error: " + err);
                     callback(err);
                 } else {
-                    logger.info("getEdkAreaAmount success : " + rows);
                     callback(rows);
                 }
             });
     },
-    getNewAreaDetail: function (id, callback) {
+    getAreaDetail: function (id, callback) {
         var sqlQuery = "SELECT" +
             " ca.id as areaId," +
             " ca.name as areaName," +
@@ -285,12 +285,11 @@ module.exports = {
         connection.query(
             sqlQuery, [id], async function (err, rows, field) {
                 if (err) {
-                    logger.error("getNewAreaDetail error: " + err);
+                    logger.error("getAreaDetail error: " + err);
                     callback(err);
                 } else {
                     await edkRoutesDao.waitForEdkRoutesByArea(id, rows);
                     await edkAreaNotesDao.waitForAreaNotesContent(id, rows);
-                    logger.info("getNewAreaDetail success : " + rows);
                     callback(rows);
                 }
             });
