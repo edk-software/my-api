@@ -59,78 +59,6 @@ module.exports = {
                 }
             });
     },
-    getEdkRoutesByArea: function (areaId, excludedRouteId, callback) {
-        var sqlQuery = "SELECT r.id as id, r.name, r.routeFrom as start, r.routeTo as end, " +
-            " r.routeLength as length, r.routeAscent as ascent  FROM cantiga_edk_routes r" +
-            " inner join cantiga_areas ca" +
-            " on(r.areaId = ca.id)" +
-            " where approved = 1";
-        var conditions = [];
-        var values = [];
-        if (areaId) {
-            conditions.push(" and ca.id=?");
-            values.push(areaId)
-        }
-        if (excludedRouteId) {
-            conditions.push(" and r.id <> ?");
-            values.push(excludedRouteId)
-        }
-
-        sqlQuery = sqlQuery + (conditions.length ?
-            conditions.join(' ') : '');
-        connection.query(sqlQuery,
-            values,
-            function (err, rows, field) {
-                if (err) {
-                    logger.error("getEdkRoutesByArea error: " + err);
-                    callback(null, err);
-                } else {
-                    logger.info("getEdkRoutesByArea success");
-                    callback(rows, null);
-                }
-            });
-    },
-    getEdkRoutesByTerritory: function (territoryId, excludedRouteId, callback) {
-        var sqlQuery = "SELECT r.id as routeId, ca.id as areaId, t.id as territoryId," +
-            " r.name as routeName, ca.name as areaName, t.name as territoryName," +
-            " r.routeFrom, r.routeTo, r.routeLength, r.routeAscent, ca.eventDate " +
-            " FROM cantiga_edk_routes r" +
-            " join cantiga_areas ca" +
-            " on(r.areaId = ca.id)" +
-            " join cantiga_territories t" +
-            " on(t.id = ca.territoryId)" +
-            " join cantiga_area_statuses cas" +
-            " on(ca.statusId = cas.id)" +
-            " where r.approved = 1";
-        var conditions = [];
-        conditions.push(" and cas.isPublish = 1 ");
-
-        var values = [];
-        if (territoryId) {
-            conditions.push(" and t.id=?");
-            values.push(territoryId)
-        }
-        if (excludedRouteId) {
-            conditions.push(" and r.id <> ?");
-            values.push(excludedRouteId)
-        }
-
-        sqlQuery = sqlQuery + (conditions.length ?
-            conditions.join(' ') : '');
-        sqlQuery = sqlQuery + " ORDER BY areaName, routeName"
-
-        connection.query(sqlQuery,
-            values,
-            function (err, rows, field) {
-                if (err) {
-                    logger.error("getEdkRoutesByTerritory error: " + err);
-                    callback(err);
-                } else {
-                    logger.info("getEdkRoutesByTerritory success");
-                    callback(rows);
-                }
-            });
-    },
     getEdkRouteList: function (territoryId, editionId, areaId, eventDate,
         orderByTerritoryName, orderByRouteName, orderByRouteLength,
         orderByEventDate, searchByRouteName, callback) {
@@ -216,43 +144,6 @@ module.exports = {
                     await edkRoutesDao.waitForEdkRoutesLastUpdated(rows);
                     rows[0].countryCount = edkCountersDao.getEdkCountryCount();
                     logger.info("getEdkRouteListForMobile success : " + rows);
-                    callback(rows);
-                }
-            });
-    },
-    getEdkRouteAmount: function (editionId, callback) {
-        var sqlQuery = "select count(1) as routeAmount " +
-            " FROM cantiga_edk_routes r " +
-            " join cantiga_areas ca " +
-            " on (ca.id = r.areaId) " +
-            " join cantiga_projects cp " +
-            " on(cp.id = ca.projectId) " +
-            " join cantiga_area_statuses cas" +
-            " on(ca.statusId = cas.id)" +
-            " where ";
-        var values = [];
-        var conditions = [];
-        conditions.push(" r.approved=1");
-        conditions.push(" cas.isPublish = 1 ");
-
-        if (editionId) {
-            conditions.push("  cp.editionId=?");
-            values.push(editionId);
-        } else {
-            conditions.push(" cp.editionId=2019")
-        }
-        sqlQuery = sqlQuery + (conditions.length ?
-            conditions.join(' and ') : '');
-
-        connection.query(sqlQuery,
-            values,
-            function (err, rows, field) {
-                if (err) {
-                    logger.error("getEdkRouteAmount error: " + err);
-                    callback(err);
-                } else {
-                    logger.info("getEdkRouteAmount success");
-
                     callback(rows);
                 }
             });
