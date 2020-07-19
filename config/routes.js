@@ -184,6 +184,22 @@ module.exports = function (app) {
      *        name: search
      *        type: string
      *        description: get areas, routes and territories by given input
+     *      - in: query
+     *        name: territoryId
+     *        type: integer
+     *        description: get areas, routes and territories by territoryId
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get areas, routes and territories by editionId
+     *      - in: query
+     *        name: areaId
+     *        type: integer
+     *        description: get areas, routes and territories by areaId
+     *      - in: query
+     *        name: eventDate
+     *        type: integer
+     *        description: get areas, routes and territories by eventDate
      *    description: Use request to get areas, routes and territories
      *    responses:
      *      '200':
