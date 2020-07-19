@@ -37,7 +37,7 @@ module.exports = function (app) {
     app.get('/routes', edkRoutesController.getRoutes);
     /**
      * @swagger
-     * /areas:
+     * /areasList:
      *  get:
      *    parameters:
      *      - in: query
@@ -210,7 +210,20 @@ module.exports = function (app) {
      *        description: A successful response
      */
     app.get('/search', edkSearchController.getSearch);
-
+    /**
+     * @swagger
+     * /areaDetail:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: id
+     *        type: integer
+     *        description: get edk area details  by id
+     *    description: Use request to get specific edk area details
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/areaDetail',  edkAreasController.getAreaDetail);
     /**
      * @swagger
@@ -219,7 +232,7 @@ module.exports = function (app) {
      *    parameters:
      *      - in: query
      *        name: projectId
-     *        type: string
+     *        type: integer
      *        description: get edk dates by projectId
      *    description: Use request to edk dates
      *    responses:
@@ -227,12 +240,100 @@ module.exports = function (app) {
      *        description: A successful response
      */
     app.get('/edkDates',  edkAreasController.getEdkDates);
-
+    /**
+     * @swagger
+     * /routeList/mobile:
+     *  get:
+     *    description: Use request to get routes for mobile
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/routeList/mobile', edkRoutesController.getRouteListForMobile);
+    /**
+     * @swagger
+     * /mobile/verificationData:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get edk statistics for edition Id
+     *    description: Use request to get edk statistics
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/verificationData',  edkGeneralInfoController.getGeneralInfoVerification);
+    /**
+     * @swagger
+     * /mobile/allGeneralInfo:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: editionId
+     *        type: integer
+     *        description: get edk general info  for edition Id
+     *    description: Use request to get edk general info like statistics, territory with associated areas and routes
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/allGeneralInfo',  edkGeneralInfoController.getEdkAllGeneralInfo);
+    /**
+     * @swagger
+     * /mobile/routePoints:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: id
+     *        type: integer
+     *        description: get edk characteristic route points by route id
+     *    description: Use request to get edk characteristic geographic route points
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/routePoints', edkRoutesController.getRoutePoints);
+    /**
+     * @swagger
+     * /mobile/routeList/byUser:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: userId
+     *        type: integer
+     *        description: get edk routes for given userId
+     *    description: Use request to get edk all routes id for specific user
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/routeList/byUser', edkRoutesController.getRoutesByUserId);
+    /**
+     * @swagger
+     * /mobile/meditationList:
+     *  get:
+     *    parameters:
+     *    description: Use request to get edk all meditations
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/meditationList', edkMeditationController.getEdkMedidationList);
+    /**
+     * @swagger
+     * /mobile/meditationById:
+     *  get:
+     *    parameters:
+     *      - in: query
+     *        name: meditationId
+     *        type: integer
+     *        description: get edk meditation by meditation id
+     *    description: Use request to get specific meditation
+     *    responses:
+     *      '200':
+     *        description: A successful response
+     */
     app.get('/mobile/meditationById', edkMeditationController.getEdkMeditationById);
 }

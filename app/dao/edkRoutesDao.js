@@ -1,9 +1,10 @@
-var connection = require('../../config/dbConnection');
+const connection = require('../../config/dbConnection');
 const logger = require('../../config/logger')
-var constants = require('../../config/constants');
+const constants = require('../../config/constants');
 const sqlQueryBuilder = require('../util/sqlQueryBuilder');
-var edkAreaNotesDao = require('./edkAreasNotesDao');
-var edkRouteNotesDao = require('./edkRouteNotesDao');
+const edkAreaNotesDao = require('./edkAreasNotesDao');
+const edkRouteNotesDao = require('./edkRouteNotesDao');
+const edkCountersDao = require('./edkCountersDao');
 
 
 
@@ -56,6 +57,37 @@ module.exports = {
                 } else {
                     logger.info("getEdkRoute success");
                     callback(rows);
+                }
+            });
+    },
+    getEdkRoutesByArea: function (areaId, excludedRouteId, callback) {
+        var sqlQuery = "SELECT r.id as id, r.name, r.routeFrom as start, r.routeTo as end, " +
+            " r.routeLength as length, r.routeAscent as ascent  FROM cantiga_edk_routes r" +
+            " inner join cantiga_areas ca" +
+            " on(r.areaId = ca.id)" +
+            " where approved = 1";
+        var conditions = [];
+        var values = [];
+        if (areaId) {
+            conditions.push(" and ca.id=?");
+            values.push(areaId)
+        }
+        if (excludedRouteId) {
+            conditions.push(" and r.id <> ?");
+            values.push(excludedRouteId)
+        }
+
+        sqlQuery = sqlQuery + (conditions.length ?
+            conditions.join(' ') : '');
+        connection.query(sqlQuery,
+            values,
+            function (err, rows, field) {
+                if (err) {
+                    logger.error("getEdkRoutesByArea error: " + err);
+                    callback(null, err);
+                } else {
+                    logger.info("getEdkRoutesByArea success");
+                    callback(rows, null);
                 }
             });
     },
@@ -132,6 +164,7 @@ module.exports = {
             });
     },
     getEdkRouteListForMobile: function (callback) {
+        let that = this;
         connection.query("SELECT max(editionId) as currentYearId FROM cantiga_projects",
             async function  (err, rows, field) {
                 if (err) {
@@ -141,7 +174,7 @@ module.exports = {
                     await edkCountersDao.waitForEdkAreasCount(rows[0].currentYearId, rows);
                     await edkCountersDao.waitForEdkRoutesCount(rows[0].currentYearId, rows);
                     await edkCountersDao.waitForTerritoriesCount(rows[0].currentYearId, rows);
-                    await edkRoutesDao.waitForEdkRoutesLastUpdated(rows);
+                    await that.waitForEdkRoutesLastUpdated(rows);
                     rows[0].countryCount = edkCountersDao.getEdkCountryCount();
                     logger.info("getEdkRouteListForMobile success : " + rows);
                     callback(rows);
@@ -256,6 +289,7 @@ module.exports = {
             });
     },
     waitForEdkRoutesByArea:  async function (id, rows) {
+
         await new Promise((resolve, reject) => {
             this.getEdkRoutesByArea(id, null, (routeRows, err) => {
                 if(err) {
