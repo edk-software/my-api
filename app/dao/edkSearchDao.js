@@ -6,17 +6,17 @@ const edkRoutesDao = require('./edkRoutesDao');
 const edkTerritoryDao = require('./edkTerritoryDao');
 
 module.exports = {
-    getEdkSearch: async function (territoryId, editionId, areaId, eventDate, textSearch, callback) {
+    getEdkSearch: async function (territoryId, editionId, areaId, eventDate, orderByName, orderByName,  textSearch, callback) {
         let routes = await waitForSearchByRoutes(territoryId, editionId, areaId, eventDate, textSearch);
         let areas = await waitForSearchByAreas(territoryId, editionId, eventDate, textSearch);
-        let territories = await waitForSearchByByTerritory(editionId, eventDate, textSearch);
+        let territories = await waitForSearchByByTerritory(editionId, eventDate, orderByName, textSearch);
         callback([...routes, ...areas, ...territories]);
     }
 }
 
-async function waitForSearchByRoutes(territoryId, editionId, areaId, eventDate, textSearch) {
+async function waitForSearchByRoutes(territoryId, editionId, areaId, eventDate, orderByName,  textSearch) {
     let routes = await new Promise((resolve, reject) => {
-        edkRoutesDao.getEdkRouteList(territoryId, editionId, areaId, eventDate, null, null, null, null, textSearch, handlePromise(reject, resolve));
+        edkRoutesDao.getEdkRouteList(territoryId, editionId, areaId, eventDate, null, orderByName, null, null, textSearch, handlePromise(reject, resolve));
     });
     return mapResult(routes, (routes) => routes
         .map(route => {
@@ -32,9 +32,9 @@ async function waitForSearchByRoutes(territoryId, editionId, areaId, eventDate, 
         }))
 }
 
-async function waitForSearchByByTerritory(editionId, eventDate, textSearch) {
+async function waitForSearchByByTerritory(editionId, eventDate, orderByName, textSearch) {
     let territories = await new Promise((resolve, reject) => {
-        edkTerritoryDao.getEdkTerritoryList(editionId, eventDate, null, null, textSearch, handlePromise(reject, resolve));
+        edkTerritoryDao.getEdkTerritoryList(editionId, eventDate, null, orderByName, textSearch, handlePromise(reject, resolve));
     });
     return mapResult(territories, (territories) => territories)
         .map(territory => {
@@ -49,7 +49,7 @@ async function waitForSearchByByTerritory(editionId, eventDate, textSearch) {
 
 async function waitForSearchByAreas(territoryId, editionId, eventDate, textSearch) {
     let areas = await new Promise((resolve, reject) => {
-        edkAreasDao.getEdkAreas(territoryId, editionId, eventDate, null, null, null, textSearch, handlePromise(reject, resolve));
+        edkAreasDao.getEdkAreas(territoryId, editionId, eventDate, orderByName, null, null, textSearch, handlePromise(reject, resolve));
     });
     return mapResult(areas, (areas) => areas
         .map(area => {

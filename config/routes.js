@@ -200,6 +200,10 @@ module.exports = function (app) {
      *        name: eventDate
      *        type: integer
      *        description: get areas, routes and territories by eventDate
+     *      - in: query
+     *        name: orderByName
+     *        type: boolean
+     *        description: get areas, routes and territories by orderByName
      *    description: Use request to get areas, routes and territories
      *    responses:
      *      '200':
