@@ -6,7 +6,7 @@ const edkRoutesDao = require('./edkRoutesDao');
 const edkTerritoryDao = require('./edkTerritoryDao');
 
 module.exports = {
-    getEdkSearch: async function (territoryId, editionId, areaId, eventDate, orderByName, orderByName,  textSearch, callback) {
+    getEdkSearch: async function (territoryId, editionId, areaId, eventDate, orderByName,  textSearch, callback) {
         let routes = await waitForSearchByRoutes(territoryId, editionId, areaId, eventDate, textSearch);
         let areas = await waitForSearchByAreas(territoryId, editionId, eventDate, textSearch);
         let territories = await waitForSearchByByTerritory(editionId, eventDate, orderByName, textSearch);
